@@ -14,5 +14,8 @@ matplotlib>=3.7.0
 # Phase 4: Configuration
 pyyaml>=6.0
 
+# Web Demo
+flask>=3.0.0
+
 # Development and testing
 pytest>=7.4.0

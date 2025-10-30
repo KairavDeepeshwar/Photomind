@@ -213,13 +213,27 @@ def load_faiss_index(in_dir: Path) -> Tuple[faiss.Index, List[str], FAISSIndexMe
     # Load metadata
     payload = json.loads((in_dir / "index.json").read_text())
     paths = payload["paths"]
-    meta = FAISSIndexMeta(**payload["meta"])
+    
+    # Extract only the fields that FAISSIndexMeta expects
+    meta_dict = payload["meta"]
+    faiss_meta = FAISSIndexMeta(
+        model_name=meta_dict.get("model_name"),
+        pretrained=meta_dict.get("pretrained"),
+        dim=meta_dict.get("dim"),
+        num_images=meta_dict.get("num_images"),
+        index_type=meta_dict.get("index_type", "Flat"),
+        nlist=meta_dict.get("nlist"),
+        nprobe=meta_dict.get("nprobe"),
+        M=meta_dict.get("M"),
+        efConstruction=meta_dict.get("efConstruction"),
+        efSearch=meta_dict.get("efSearch")
+    )
     
     # Verify consistency
     assert index.ntotal == len(paths), "Index size / paths length mismatch"
-    assert index.ntotal == meta.num_images, "Index size / metadata mismatch"
+    assert index.ntotal == faiss_meta.num_images, "Index size / metadata mismatch"
     
-    return index, paths, meta
+    return index, paths, faiss_meta
 
 
 def add_to_faiss_index(

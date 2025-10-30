@@ -1,0 +1,12 @@
+name: clipsex
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pillow
+  - pytest
+  - numpy
+  - tqdm
+  - pip
+  - pip:
+      - open-clip-torch
